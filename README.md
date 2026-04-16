@@ -1,2 +1,2 @@
 # Machine-learning-algorithms
-Implementation of machin learning algorithms in numpy and pandas
+Implementation of machine learning algorithms using numpy and pandas
