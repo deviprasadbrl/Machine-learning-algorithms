@@ -45,9 +45,6 @@ class logistic_regression:
         pred=np.where(out>=0.5,1,0)
         return "M" if 1 else "B"
     
-    def interpred(self):
-        return f"The most wieghted weight:{max(self.w)}"
-    
     def parameters(self):
         return f"w={self.w},b={self.b}"
     
