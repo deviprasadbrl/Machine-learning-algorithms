@@ -1,37 +1,36 @@
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+
 
 class logistic_regression:
-    def __init__(self,x_train,y_train,x_test,y_test):
-        self.x_train=x_train
-        self.y_train=y_train
-        self.x_test=x_test
-        self.y_test=y_test
+    def __init__(self,lr=0.01,epochs=10000):
+        self.lr=lr
+        self.epochs=epochs
         self.w = None
         self.b = None
-        self.scaler=StandardScaler()
+        self.mean=None
+        self.std=None
 
 
     def sigmoid(self,z):
         z = np.clip(z,-500,500)
         return 1/(1+np.exp(-z))
     
-    def scale_data(self):
-        self.x_train=self.scaler.fit_transform(self.x_train)
-        self.x_test=self.scaler.transform(self.x_test)
 
-
-    def fit(self):
-        w=np.zeros(self.x_train.shape[1])
+    def fit(self,x,y):
+        self.mean=np.mean(x,axis=0)
+        self.std=np.std(x,axis=0)
+        x_s=(x-self.mean)/(self.std+1e-8)
+        m,n=x_s.shape
+        w=np.zeros(n)
         b=0
-        for i in range(10000):
-            fw_b=self.sigmoid(np.dot(self.x_train,w)+b)
-            eror=fw_b-self.y_train
-            dj_dw=(1/len(self.x_train)*np.dot(self.x_train.T,eror))
-            dj_db=(1/len(self.x_train)*np.sum(eror))
+        for i in range(self.epochs):
+            fw_b=self.sigmoid(np.dot(x_s,w)+b)
+            eror=fw_b-y
+            dj_dw=(1/m)*np.dot(x_s.T,eror)
+            dj_db=(1/m)*np.sum(eror)
 
-            w-=0.01*dj_dw
-            b-=0.01*dj_db
+            w-=self.lr*dj_dw
+            b-=self.lr*dj_db
         
         self.w=w
         self.b=b
@@ -40,10 +39,10 @@ class logistic_regression:
         x_input = np.array(input)
         if x_input.ndim == 1:
             x_input = x_input.reshape(1, -1)
-        x_input=self.scaler.transform(x_input)
+        x_input=(x_input-self.mean)/(self.std+1e-8)
         out=self.sigmoid(np.dot(x_input,self.w)+self.b)
         pred=np.where(out>=0.5,1,0)
-        return "M" if 1 else "B"
+        return "M" if pred==1 else "B"
     
     def parameters(self):
         return f"w={self.w},b={self.b}"
