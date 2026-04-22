@@ -1,5 +1,4 @@
 from algo import logistic_regression
-from sklearn.model_selection import train_test_split
 import pandas as pd
 
 df=pd.read_csv('Cancer_Data.csv')      
@@ -8,12 +7,9 @@ x = modified_df.select_dtypes(include=["float64"]).values
 df["diagnosis"]=df["diagnosis"].map({"M":1,"B":0})
 y=df["diagnosis"].values
 
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
+model=logistic_regression()
 
-model=logistic_regression(x_train,y_train,x_test,y_test)
-model.scale_data()
-model.fit()
+model.fit(x,y)
 print(model.parameters())
-//From the dataset
-test=[17.05,19.08,113.4,895,0.1141,0.1572,0.191,0.109,0.2131,0.06325,0.2959,0.679,2.153,31.98,0.005532,0.02008,0.03055,0.01384,0.01177,0.002336,19.59,24.89,133.5,1189,0.1703,0.3934,0.5018,0.2543,0.3109,0.09061]
+test=[13.9,19.24,88.73,602.9,0.07991,0.05326,0.02995,0.0207,0.1579,0.05594,0.3316,0.9264,2.056,28.41,0.003704,0.01082,0.0153,0.006275,0.01062,0.002217,16.41,26.42,104.4,830.5,0.1064,0.1415,0.1673,0.0815,0.2356,0.07603]
 print(model.predict(test))
