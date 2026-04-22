@@ -1,7 +1,7 @@
 from algo import Perceptron
 import pandas as pd
 
-df=pd.read_csv(r'C:\Users\Devi Prasad\OneDrive\Documents\prep\Machine learning\DEEP LEARNING\perceptron\placement.csv')
+df=pd.read_csv(r'placement.csv')
 
 df["cgpa"] = df["cgpa"].fillna(df["cgpa"].mean())
 df["iq"] = df["iq"].fillna(df["iq"].mean())
