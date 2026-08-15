@@ -1,1 +1,49 @@
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SimpleSelfAttenttion(nn.Module):
+    def __init__(self,embed_dim):
+        super().__init__()
+
+        self.q_proj=nn.Linear(embed_dim,embed_dim)
+        self.k_proj=nn.Linear(embed_dim,embed_dim)
+        self.v_proj=nn.Linear(embed_dim,embed_dim)
+
+        self.scale=embed_dim**0.5
+
+    def forward(self,x,mask):
+
+        q=self.q_proj(x)
+        k=self.k_proj(x)
+        v=self.v_proj(x)
+
+        score=torch.matmul(q,k.transpose(-2,-1))
+
+        
+        score=score/self.scale
+
+        if mask is not None:
+            score=score.masked_fill(mask==0,float('-inf'))
+
+        attention_weights=F.softmax(score,dim=-1)
+
+        out=torch.matmul(attention_weights,v)
+
+        return attention_weights,out
+
+if __name__ == "__main__":
+
+    attention_module=SimpleSelfAttenttion(embed_dim=4)
+    
+    dummy_input=torch.randn(1, 3, 4)
+
+    attention_weights,output=attention_module(dummy_input, mask=None)
+    
+    print("--- Shapes Verification ---")
+    print(f"Input Shape:   {dummy_input.shape}")      
+    print(f"Attention_Weights Shape: {attention_weights.shape}")   
+
+  
+    print(f"Output Shape:  {output.shape}")
