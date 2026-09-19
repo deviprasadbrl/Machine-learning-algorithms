@@ -11,9 +11,9 @@ class SimpleSelfAttenttion(nn.Module):
         self.k_proj=nn.Linear(d_model,d_model)
         self.v_proj=nn.Linear(d_model,d_model)
 
-        self.scale=math.sqrt(d_model)
+        self.scale=d_model**0.5
 
-    def forward(self,x,mask=None):
+    def forward(self,x,is_causal=False,mask=None):
         q=self.q_proj(x)
         k=self.k_proj(x)
         v=self.v_proj(x)
@@ -21,7 +21,13 @@ class SimpleSelfAttenttion(nn.Module):
         score=torch.matmul(q,k.transpose(-2,-1))
 
         if mask is not None:
+            if mask.dim()==2:
+                mask=mask.unsqueeze(1).unsqueeze(2)
             score=score.masked_fill(mask==0,-1e9)
+
+        if is_causal:
+            causal_mask = nn.Transformer.generate_square_subsequent_mask(sz=sequence, device=x.device,dtype=x.dtype)
+            score = score + causal_mask
 
         score=score/self.scale
 
@@ -37,7 +43,7 @@ if __name__ == "__main__":
     
     dummy_input=torch.randn(1, 3, 4)
 
-    attention_weights,output=attention_module(dummy_input, mask=None)
+    attention_weights,output=attention_module(dummy_input,is_causal=False,mask=None)
     
     print("--- Shapes Verification ---")
     print(f"Input Shape:   {dummy_input.shape}")      
