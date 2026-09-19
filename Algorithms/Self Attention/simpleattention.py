@@ -14,6 +14,7 @@ class SimpleSelfAttenttion(nn.Module):
         self.scale=d_model**0.5
 
     def forward(self,x,is_causal=False,mask=None):
+        batch_size,sequence,_=x.shape
         q=self.q_proj(x)
         k=self.k_proj(x)
         v=self.v_proj(x)
