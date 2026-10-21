@@ -70,15 +70,6 @@ if __name__ == "__main__":
         
     print("--- Shapes Verification ---")
     print(f"Input Shape:   {dummy_input.shape}")               
-    print(f"Output Shape:  {output.shape}")if __name__ == "__main__":
-  
-    attention_module=MultiHeadAttention(d_model=64,num_heads=4)
-    dummy_input=torch.randn(1, 3, 64)
-    
-    output=attention_module(dummy_input,is_causal=False,mask=None)
-        
-    print("--- Shapes Verification ---")
-    print(f"Input Shape:   {dummy_input.shape}")               
     print(f"Output Shape:  {output.shape}")
         
     print("--- Shapes Verification ---")
