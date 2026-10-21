@@ -60,6 +60,8 @@ class GroupedQueryAttention(nn.Module):
         context=context.transpose(1,2).contiguous().view(batch,-1,self.d_model)
 
         out=self.out_proj(context)
+        
+        return out
 
 
 
@@ -76,6 +78,3 @@ if __name__ == "__main__":
     print("--- Shapes Verification ---")
     print(f"Input Shape:   {dummy_input.shape}")      
     print(f"Output Shape:  {output.shape}")
-
-
-        return out
