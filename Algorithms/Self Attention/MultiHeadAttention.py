@@ -71,8 +71,3 @@ if __name__ == "__main__":
     print("--- Shapes Verification ---")
     print(f"Input Shape:   {dummy_input.shape}")               
     print(f"Output Shape:  {output.shape}")
-        
-    print("--- Shapes Verification ---")
-    print(f"Input Shape:   {dummy_input.shape}")      
-    print(f"Attention_Weights Shape: {attention_weights.shape}")          
-    print(f"Output Shape:  {output.shape}")
