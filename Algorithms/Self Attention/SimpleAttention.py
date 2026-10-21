@@ -24,11 +24,16 @@ class SimpleSelfAttenttion(nn.Module):
         if mask is not None:
             if mask.dim()==2:
                 mask=mask.unsqueeze(1).unsqueeze(2)
-            score=score.masked_fill(mask==0,-1e9)
+            elif mask.dim()==3:
+                mask=mask.unsqueeze(1)
+            score=score.masked_fill(mask==0,torch.finfo(score.dtype).min)
 
+        
         if is_causal:
-            causal_mask = nn.Transformer.generate_square_subsequent_mask(sz=sequence, device=x.device,dtype=x.dtype)
-            score = score + causal_mask
+            Lq,Lk=score.size(-2),score.size(-1)
+
+            causal=torch.ones(Lq,Lk,dtype=torch.bool,device=x.device).tril()
+            score=score.masked_fill(~causal,torch.finfo(score.dtype).min)
 
         score=score/self.scale
 
